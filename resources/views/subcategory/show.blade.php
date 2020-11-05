@@ -14,8 +14,7 @@
 			<div class="tile">
 				<div class="tile-body">
 					<h3 class="my-5">Subcategory Name : <small class="text-danger"> {{$subcategory->name}}</small></h3>
-					<h3 class="my-5">Category Id : <small class="text-danger">{{$category->id}} </small></h3>
-					<h3 class="my-5">Category Name : <small class="text-danger">{{$category->name}}</small></h3>
+					<h3 class="my-5">Category Name : <small class="text-danger">{{$subcategory->category->name}}</small></h3>
 				</div>
 			</div>
 		</div>

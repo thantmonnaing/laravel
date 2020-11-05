@@ -13,14 +13,33 @@
 		<div class="col-md-12">
 			<div class="tile">
 				<div class="tile-body">
-					<img src="{{asset($item->photo)}}" class="img-fluid" style="width: 200px;height: 200px;object-fit: cover;">
-					<h3 class="mt-5">{{$item->name}}</h3>
-					@php
-					if( $item->discount > 0)
-						echo "<span class='text-danger'> $item->discount Ks</span> <br><del>$item->price Ks</del>";
-					else
-						echo "<span class='text-danger'> $item->price Ks</span>";
-					@endphp
+
+					<div class="row m-5">
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+							<img src="{{asset($item->photo)}}" class="img-fluid">
+						</div>	
+
+
+						<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+
+							<h4> {{$item->name}} </h4>
+
+							<p> {{$item->codeno}}</p>
+
+							<p> {{$item->brand->name}}</p>
+
+							<p> {{$item->subcategory->name}}</p>
+
+							<p> 
+								@if( $item->discount > 0)
+									<span class='text-uppercase'> Discount : </span><span class='text-danger'> {{$item->discount}} Ks</span> <br><span class='text-uppercase'> Current Price : </span><del>{{$item->price}} Ks</del>
+								@else
+									<span class='text-uppercase'> Current Price : </span><span class='text-danger'>{{$item->price}} Ks</span>
+								@endif			
+
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

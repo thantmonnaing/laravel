@@ -1,7 +1,4 @@
 @extends('backendtemplate')
-@section('category_active')
-  active
-@endsection
 @section('content')
 	<main class="app-content">
 	<div class="app-title">

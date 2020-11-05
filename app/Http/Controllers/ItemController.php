@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Item;
 use App\Subcategory;
+use App\Category;
 use App\Brand;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Collection;
@@ -29,9 +30,10 @@ class ItemController extends Controller
      */
     public function create()
     {
+        $categories = Category::all();
         $subcategories = Subcategory::all();
         $brands = Brand::all();
-        return view('item.create',compact('subcategories', 'brands'));
+        return view('item.create',compact('categories', 'subcategories', 'brands'));
     }
 
     /**
@@ -65,10 +67,10 @@ class ItemController extends Controller
             }
 
         //store
-            $random = mt_rand(10000, 99999);
+            // $random = mt_rand(10000, 99999);
 
             $item = new Item;
-            $item->codeno = 'OP-'.$random;
+            $item->codeno = uniqid();
             $item->name = $request->name;
             $item->photo = $path;
             $item->price = $request->price;
@@ -101,9 +103,10 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
+        $categories = Category::all();
         $subcategories = Subcategory::all();
         $brands = Brand::all();
-        return view('item.edit',compact('item', 'subcategories', 'brands'));
+        return view('item.edit',compact('categories', 'item', 'subcategories', 'brands'));
     }
 
     /**
@@ -166,5 +169,11 @@ class ItemController extends Controller
         unlink(public_path($item->photo));
         $item->delete();
         return redirect()->route('item.index');
+    }
+
+    public function filterCategory(Request $request){
+        $cid = $request->cid;
+        $subcategories = Subcategory::where('category_id',$cid)->get();
+        return $subcategories;
     }
 }

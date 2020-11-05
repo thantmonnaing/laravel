@@ -20,7 +20,7 @@
 						<div class="form-group row">
  							<label for="name_id" class="col-sm-2 col-form-label"> Name </label>
  							<div class="col-sm-10">
- 								<input type="text" class="form-control @error('name') is-invalid @enderror" id="name_id" name="name">
+ 								<input type="text" class="form-control @error('name') is-invalid @enderror" id="name_id" name="name" value="{{old('name')}}">
  								@error('name')
 					                <span class="invalid-feedback" role="alert">
 					                	<strong>{{ $message }}</strong>
@@ -32,7 +32,7 @@
  						<div class="form-group row">
  							<label for="photo_id" class="col-sm-2 col-form-label"> Photo <small class="text-danger"> (* jpeg | jpg | png) </small></label>
  							<div class="col-sm-10">
- 								<input type="file" id="photo_id" name="photo"  class="form-control-file @error('photo') is-invalid @enderror">
+ 								<input type="file" id="photo_id" name="photo"  class="form-control-file @error('photo') is-invalid @enderror" value="{{old('photo')}}">
  								@error('photo')
 					                <span class="invalid-feedback" role="alert">
 					                	<strong>{{ $message }}</strong>
@@ -55,7 +55,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="price" role="tab-panel" aria-labelledby="price_tab">
-                                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price_id" name="price">
+                                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price_id" name="price" value="{{old('price')}}">
                                         @error('price')
 							                <span class="invalid-feedback" role="alert">
 							                	<strong>{{ $message }}</strong>
@@ -63,7 +63,7 @@
 							            @enderror
                                     </div>
                                     <div class="tab-pane fade" id="discount" role="tab-panel" aria-labelledby="discount_tab">
-                                        <input type="number" class="form-control" id="discount_id" name="discount">
+                                        <input type="number" class="form-control" id="discount_id" name="discount" value="{{old('discount')}}">
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
  						<div class="form-group row">
  							<label for="desc_id" class="col-sm-2 col-form-label"> Description </label>
  							<div class="col-sm-10">
- 								<textarea id="desc_id" name="description" class="form-control @error('description') is-invalid @enderror" rows="2"></textarea>
+ 								<textarea id="desc_id" name="description" class="form-control @error('description') is-invalid @enderror" rows="2" value="{{old('description')}}"></textarea>
  								@error('description')
 					                <span class="invalid-feedback" role="alert">
 					                	<strong>{{ $message }}</strong>
@@ -99,12 +99,28 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="category_id" class="col-sm-2 col-form-label"> Category </label>
+                            <div class="col-sm-10">
+                                <select class="custom-select  @error('category') is-invalid @enderror category" id="category_id" name="category">
+                                    <option selected hidden value="">Choose Category</option>
+                                    @foreach($categories as $c_row)
+                                    	<option value={{$c_row->id}}>{{$c_row->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('category')
+					                <span class="invalid-feedback" role="alert">
+					                	<strong>{{ $message }}</strong>
+					                </span>
+					            @enderror
+                            </div>
+                        </div> 
+
+                        <div class="form-group row">
                             <label for="subcategory_id" class="col-sm-2 col-form-label"> Subcategory </label>
                             <div class="col-sm-10">
-                                <select class="custom-select  @error('subcategory') is-invalid @enderror" id="subcategory_id" name="subcategory">
-                                    <option selected hidden value="">Choose Subcategory</option>
+                                <select class="custom-select  @error('subcategory') is-invalid @enderror subcategory_option" id="subcategory_id" name="subcategory" disabled="">
                                     @foreach($subcategories as $s_row)
-                                    	<option value={{$s_row->id}}>{{$s_row->name}}</option>
+                                        <option value={{$s_row->id}}>{{$s_row->name}}</option>
                                     @endforeach
                                 </select>
                                 @error('subcategory')
@@ -125,12 +141,36 @@
  						</div>
 
  					</form>
-
-
 				</div>
 			</div>
 		</div>
 	</div>
 </main>
+@endsection
 
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('.category').change(function(){
+                let categoryid = $(this).val();
+                // alert(categoryid);
+                $.post("{{route('filterCategory')}}", {cid:categoryid}, function(response){
+                    // console.log(response);
+                    var html = `<option selected hidden value="">Choose Subcategory</option>`;                   
+                    for(let row of response){
+                        html+=`
+                        <option value=${row.id}>${row.name}</option>
+                        `;
+                    }
+                    $('#subcategory_id').prop('disabled',false);
+                    $('.subcategory_option').html(html);
+                })
+            })        
+        })  
+    </script>    
 @endsection

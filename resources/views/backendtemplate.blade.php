@@ -3,6 +3,7 @@
   <head>
     <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
     <!-- Twitter meta-->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:site" content="@pratikborsadiya">
     <meta property="twitter:creator" content="@pratikborsadiya">
@@ -100,25 +101,25 @@
           </a>
         </li>
         <li class="treeview">
-          <a class="app-menu__item @yield('category_active')" href="{{route('category.index')}}">
+          <a class="app-menu__item {{Request::is('category*') ? 'active' : ''}}" href="{{route('category.index')}}">
             <i class="app-menu__icon fa fa-laptop"></i>
             <span class="app-menu__label">Category</span>
           </a>
         </li>
         <li class="treeview">
-          <a class="app-menu__item @yield('subcategory_active')" href="{{route('subcategory.index')}}">
+          <a class="app-menu__item {{Request::is('subcategory*') ? 'active' : ''}}" href="{{route('subcategory.index')}}">
             <i class="app-menu__icon fa fa-laptop"></i>
             <span class="app-menu__label">Subategory</span>
           </a>
         </li>
         <li class="treeview">
-          <a class="app-menu__item @yield('item_active')" href="{{route('item.index')}}">
+          <a class="app-menu__item {{Request::is('item*') ? 'active' : ''}}" href="{{route('item.index')}}">
             <i class="app-menu__icon fa fa-laptop"></i>
             <span class="app-menu__label">Item</span>
           </a>
         </li>
         <li class="treeview">
-          <a class="app-menu__item @yield('brand_active')" href="{{route('brand.index')}}">
+          <a class="app-menu__item {{Request::is('brand*') ? 'active' : ''}}" href="{{route('brand.index')}}">
             <i class="app-menu__icon fa fa-laptop"></i>
             <span class="app-menu__label">Brand</span>
           </a>

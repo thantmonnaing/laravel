@@ -62,8 +62,7 @@ class SubcategoryController extends Controller
      */
     public function show(Subcategory $subcategory)
     {
-        $category = Category::find($subcategory->category_id);
-        return view('subcategory.show',compact('subcategory','category'));
+        return view('subcategory.show',compact('subcategory'));
     }
 
     /**

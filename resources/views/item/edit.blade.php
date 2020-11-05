@@ -101,13 +101,12 @@
  						<div class="form-group row">
                             <label for="brand_id" class="col-sm-2 col-form-label"> Brand </label>
                             <div class="col-sm-10">
-                                <select class="custom-select  @error('brand') is-invalid @enderror" id="brand_id" name="brand">
+                                <select class="custom-select @error('brand') is-invalid @enderror" id="brand_id" name="brand">
                                     @foreach($brands as $b_row)
                                     	<option value={{$b_row->id}} 
-                                    		@php 
-                                    		if($b_row->id == $item->brand_id) 
-                                    			echo "selected";
-                                    		@endphp>{{$b_row->name}}</option>
+                                    		@if($b_row->id == $item->brand_id) 
+                                    			{{'selected'}}
+                                    		@endif>{{$b_row->name}}</option>
                                     @endforeach
                                 </select>
                                 @error('brand')
@@ -119,15 +118,33 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="category_id" class="col-sm-2 col-form-label"> Category </label>
+                            <div class="col-sm-10">
+                                <select class="custom-select category @error('category') is-invalid @enderror" id="category_id" name="category">
+                                    @foreach($categories as $c_row)
+                                    	<option value={{$c_row->id}} 
+                                    		@if($c_row->id == $item->subcategory->category_id) 
+                                    			{{'selected'}}
+                                    		@endif>{{$c_row->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('category')
+					                <span class="invalid-feedback" role="alert">
+					                	<strong>{{ $message }}</strong>
+					                </span>
+					            @enderror
+                            </div>
+                        </div> 
+
+                        <div class="form-group row">
                             <label for="subcategory_id" class="col-sm-2 col-form-label"> Subcategory </label>
                             <div class="col-sm-10">
-                                <select class="custom-select  @error('subcategory') is-invalid @enderror" id="subcategory_id" name="subcategory">
+                                <select class="custom-select subcategory @error('subcategory') is-invalid @enderror" id="subcategory_id" name="subcategory">
                                     @foreach($subcategories as $s_row)
                                     	<option value={{$s_row->id}} 
-                                    		@php 
-                                    		if($s_row->id == $item->subcategory_id) 
-                                    			echo "selected";
-                                    		@endphp>{{$s_row->name}}</option>
+                                    		@if($s_row->id == $item->subcategory_id) 
+                                    			{{'selected'}}
+                                    		@endif>{{$s_row->name}}</option>
                                     @endforeach
                                 </select>
                                 @error('subcategory')
@@ -152,4 +169,30 @@
 		</div>
 	</div>
 </main>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('.category').change(function(){
+                let categoryid = $(this).val();
+                // alert(categoryid);
+                var html="";
+                $.post("{{route('filterCategory')}}", {cid:categoryid}, function(response){
+                    console.log(response);
+                    for(let row of response){
+                        html+=`
+                        <option value=${row.id}>${row.name}</option>
+                        `;
+                    }
+                    $('.subcategory').html(html);
+                })
+            })        
+        })  
+    </script>    
 @endsection
