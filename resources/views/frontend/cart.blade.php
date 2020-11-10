@@ -27,16 +27,28 @@
 						</td>
 					</tr>
 					<tr class="mx-5"> 
-						<td></td>
-						<td colspan="5"> 
-							<textarea class="form-control" id="notes" placeholder="Any Request..."></textarea>
-						</td>
-						<td colspan="3">
-							<button class="btn btn-success btn-block mainfullbtncolor checkoutbtn">
-								Check Out 
-							</button>
-						</td>
-						<td></td>
+
+						<form method="" action="" class="checkoutform">
+							@csrf
+							<td></td>
+							<td colspan="5"> 
+								<textarea class="form-control" id="notes" placeholder="Any Request..." required></textarea>
+								<input type="hidden" name="order" value="" id="ls">
+							</td>
+							<td colspan="3">
+								@role('customer')
+								<button class="btn btn-success btn-block checkoutbtn" type="submit">
+									Check Out 
+								</button>
+								@else
+								<a class="btn btn-success btn-block mainfullbtncolor" href="{{route('signin')}}">
+									Sign in Check Out 
+								</a>
+								@endrole
+							</td>
+							<td></td>
+						</form>
+						
 					</tr>
 				</tfoot>
 			</table>
@@ -48,4 +60,30 @@
 
 @section('script')
 	<script type="text/javascript" src="{{asset('my_asset/js/cart.js')}}"></script>
+	<script type="text/javascript">
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      
+      $(document).ready(function () {
+        // Usin Ajax
+        $('.checkoutform').submit(function(e){
+          let notes = $('#notes').val();
+          if (notes === "") {
+            return true;
+          }else{
+            let order = localStorage.getItem('items'); // JSON String
+            $.post("{{route('order.store')}}",{order:order,notes:notes},function (response) {
+              localStorage.clear();
+              location.href="/ordersuccess";
+            })
+            e.preventDefault();
+          }
+        })
+        // Using Form
+        $('#ls').val(localStorage.getItem('items'));
+      })
+    </script>
 @endsection

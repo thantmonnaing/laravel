@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -36,7 +37,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->valiade([
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
@@ -49,6 +50,8 @@ class UserController extends Controller
         $user->save();
 
         $user->assignRole('customer');
+
+        Auth::login($user);
 
         return redirect()->route('mainpage');
     }

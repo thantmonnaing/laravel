@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('contact', 'MainController@contact')->name('contactpage');
 
+Route::middleware('role:admin')->group(function (){
+	
 Route::resource('brand', 'BrandController'); // 7	(get, post, put, delete)
 
 Route::resource('category', 'CategoryController');
@@ -29,7 +31,17 @@ Route::resource('subcategory', 'SubcategoryController');
 
 Route::resource('item', 'ItemController');
 
+Route::resource('order', 'OrderController');
+
 Route::post('filter', 'ItemController@filterCategory')->name('filterCategory');
+
+});
+
+Route::post('confirm/{id}', 'OrderController@confirm')->name('order.confirm');
+
+Route::get('/ordersuccess', 'OrderController@ordersuccess')->name('ordersuccess');
+
+
 
 //frontend
 Route::get('/', 'FrontendController@home')->name('mainpage');
@@ -43,6 +55,8 @@ Route::get('itemdetail/{id}', 'FrontendController@itemdetail')->name('itemdetail
 Route::get('cart', 'FrontendController@cart')->name('cart');
 
 Route::get('itemsbysubcategory/{id}', 'FrontendController@itemsbysubcategory')->name('itemsbysubcategory');
+
+Route::get('itemsbybrand/{id}', 'FrontendController@itemsbybrand')->name('itemsbybrand');
 
 //user
 
